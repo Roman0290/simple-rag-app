@@ -1,0 +1,16 @@
+langchain
+langchain-chroma
+langchain-groq
+chromadb
+python-dotenv
+streamlit
+pypdf
+sentence-transformers
+faiss-cpu
+numpy
+pandas
+tiktoken
+langchain-text-splitters
+rank_bm25
+langchain-huggingface
+chromadb
