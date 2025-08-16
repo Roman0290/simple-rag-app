@@ -27,7 +27,7 @@ class DocumentLoader:
     def get_supported_files(self) -> List[str]:
         """Get list of supported files in the documents directory"""
         if not os.path.exists(self.documents_dir):
-            print(f"⚠️ Documents directory '{self.documents_dir}' does not exist")
+            print(f"Documents directory '{self.documents_dir}' does not exist")
             return []
         
         supported_files = []
@@ -38,7 +38,7 @@ class DocumentLoader:
                 if file_ext in self.supported_extensions:
                     supported_files.append(filename)
                 else:
-                    print(f"⚠️ Unsupported file type: {filename}")
+                    print(f"Unsupported file type: {filename}")
         
         return supported_files
     
@@ -53,7 +53,7 @@ class DocumentLoader:
         try:
             loader_class = self.supported_extensions[file_ext]
             
-            # Handle different loader initialization requirements
+            
             if file_ext == '.csv':
                 loader = loader_class(file_path, encoding='utf-8')
             else:
@@ -64,14 +64,14 @@ class DocumentLoader:
             return documents
             
         except Exception as e:
-            print(f"❌ Error loading {filename}: {e}")
+            print(f"Error loading {filename}: {e}")
             return []
     
     def load_all_documents(self) -> List[Document]:
         """Load all supported documents from the directory"""
         supported_files = self.get_supported_files()
         if not supported_files:
-            print("⚠️ No supported documents found")
+            print("No supported documents found")
             return []
         
         all_documents = []

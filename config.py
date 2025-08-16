@@ -172,7 +172,7 @@ class Config:
             errors.append("TEMPERATURE must be between 0 and 2")
         
         if errors:
-            print("❌ Configuration validation failed:")
+            print("Configuration validation failed:")
             for error in errors:
                 print(f"   - {error}")
             return False
@@ -181,46 +181,46 @@ class Config:
     
     def print_config(self):
         """Print current configuration"""
-        print("🔧 RAG Chatbot Configuration:")
+        print("RAG Chatbot Configuration:")
         print("=" * 40)
         
-        print(f"📁 Project Root: {self.project_root}")
-        print(f"📁 Documents Directory: {self.raw_documents_dir}")
-        print(f"🗄️ Chroma DB Directory: {self.chroma_persist_dir}")
-        print(f"📚 Collection Name: {self.collection_name}")
+        print(f"Project Root: {self.project_root}")
+        print(f"Documents Directory: {self.raw_documents_dir}")
+        print(f"Chroma DB Directory: {self.chroma_persist_dir}")
+        print(f"Collection Name: {self.collection_name}")
         
-        print(f"\n🤖 Embedding Model: {self.embedding_model}")
-        print(f"🔧 Device: {self.embedding_device}")
-        print(f"📏 Chunk Size: {self.chunk_size}")
-        print(f"🔄 Chunk Overlap: {self.chunk_overlap}")
+        print(f"\nEmbedding Model: {self.embedding_model}")
+        print(f"Device: {self.embedding_device}")
+        print(f"Chunk Size: {self.chunk_size}")
+        print(f"Chunk Overlap: {self.chunk_overlap}")
         
-        print(f"\n🔍 Default K: {self.default_k}")
-        print(f"🔍 Search Type: {self.search_type}")
+        print(f"\nDefault K: {self.default_k}")
+        print(f"Search Type: {self.search_type}")
         
-        print(f"\n🚀 Groq Model: {self.groq_model}")
-        print(f"🌡️ Temperature: {self.temperature}")
-        print(f"📝 Max Tokens: {self.max_tokens}")
+        print(f"\nGroq Model: {self.groq_model}")
+        print(f"Temperature: {self.temperature}")
+        print(f"Max Tokens: {self.max_tokens}")
         
-        print(f"\n🌐 Streamlit Port: {self.streamlit_port}")
-        print(f"🌐 Streamlit Host: {self.streamlit_host}")
+        print(f"\nStreamlit Port: {self.streamlit_port}")
+        print(f"Streamlit Host: {self.streamlit_host}")
         
-        print(f"\n⚡ Batch Size: {self.batch_size}")
-        print(f"⚡ Max Workers: {self.max_workers}")
+        print(f"\nBatch Size: {self.batch_size}")
+        print(f"Max Workers: {self.max_workers}")
         
-        print(f"\n🚩 Feature Flags:")
+        print(f"\nFeature Flags:")
         flags = self.get_feature_flags()
         for feature, enabled in flags.items():
-            status = "✅" if enabled else "❌"
-            print(f"   {status} {feature}")
+            status = "Enabled" if enabled else "Disabled"
+            print(f"   {feature}: {status}")
     
     def update_config(self, **kwargs):
         """Update configuration values"""
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
-                print(f"🔄 Updated {key}: {value}")
+                print(f"Updated {key}: {value}")
             else:
-                print(f"⚠️ Unknown configuration key: {key}")
+                print(f"Unknown configuration key: {key}")
     
     def save_to_env(self, env_file: str = ".env"):
         """Save current configuration to .env file"""
@@ -282,9 +282,9 @@ ENABLE_FACT_CHECKING={str(self.enable_fact_checking).lower()}
         try:
             with open(env_file, 'w') as f:
                 f.write(env_content)
-            print(f"✅ Configuration saved to {env_file}")
+            print(f"Configuration saved to {env_file}")
         except Exception as e:
-            print(f"❌ Failed to save configuration: {e}")
+            print(f"Failed to save configuration: {e}")
 
 # Global configuration instance
 config = Config()

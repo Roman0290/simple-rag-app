@@ -29,7 +29,7 @@ class PromptTemplates:
             template=rag_template
         )
         
-        # Chat-style RAG prompt template
+       
         chat_rag_template = """You are a helpful AI assistant that answers questions based on the provided context. 
         Use only the information from the context to answer the question. If the context doesn't contain enough 
         information to answer the question, say "I don't have enough information to answer this question based on the provided context."
@@ -51,7 +51,7 @@ class PromptTemplates:
             )
         ])
         
-        # Summarization prompt template
+       
         summary_template = """You are a helpful AI assistant that summarizes documents. 
         Please provide a concise summary of the following text, highlighting the key points and main ideas.
 
@@ -65,7 +65,7 @@ class PromptTemplates:
             template=summary_template
         )
         
-        # Question generation prompt template
+        
         question_gen_template = """Based on the following context, generate 3 relevant questions that could be asked about this information.
         Make sure the questions are specific and would require the context to answer properly.
 
@@ -80,7 +80,6 @@ class PromptTemplates:
             template=question_gen_template
         )
         
-        # Fact-checking prompt template
         fact_check_template = """You are a helpful AI assistant that fact-checks information. 
         Based on the provided context, determine if the following statement is true, false, or if there's insufficient information.
 
@@ -95,8 +94,7 @@ class PromptTemplates:
             input_variables=["context", "statement"],
             template=fact_check_template
         )
-        
-        # Detailed analysis prompt template
+       
         detailed_analysis_template = """You are a helpful AI assistant that provides detailed analysis. 
         Based on the provided context, please provide a comprehensive analysis of the following question.
         Include relevant details, examples, and connections from the context.
@@ -152,7 +150,7 @@ class PromptTemplates:
     
     def print_template_info(self):
         """Print information about available templates"""
-        print("\n📝 Available Prompt Templates:")
+        print("\nAvailable Prompt Templates:")
         for template_name in self.templates:
             template = self.templates[template_name]
             input_vars = template.input_variables
@@ -166,8 +164,8 @@ class PromptTemplates:
                 template=template_text
             )
             self.templates[template_name] = custom_template
-            print(f"✅ Custom template '{template_name}' created successfully")
+            print(f"Custom template '{template_name}' created successfully")
             return custom_template
         except Exception as e:
-            print(f"❌ Error creating custom template: {e}")
+            print(f"Error creating custom template: {e}")
             raise

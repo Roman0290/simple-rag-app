@@ -32,13 +32,13 @@ class LLMChain:
             print(f"   Model: {self.model_name}")
             print(f"   Temperature: {self.temperature}")
         except Exception as e:
-            print(f"❌ Error initializing Groq LLM: {e}")
+            print(f"Error initializing Groq LLM: {e}")
             raise
     
     def generate_answer(self, query: str, context: str, template_name: str = 'rag_basic') -> str:
         """Generate answer using the LLM with context"""
         try:
-            # Format the prompt using the specified template
+            
             if template_name == 'rag_chat':
                 prompt = self.prompt_templates.get_template(template_name)
                 formatted_prompt = prompt.format_messages(context=context, question=query)
@@ -51,7 +51,7 @@ class LLMChain:
                 return response.content
                 
         except Exception as e:
-            print(f"❌ Error generating answer: {e}")
+            print(f"Error generating answer: {e}")
             return f"Sorry, I encountered an error while generating the answer: {str(e)}"
     
     def generate_summary(self, text: str) -> str:
@@ -62,7 +62,7 @@ class LLMChain:
             response = self.llm.invoke(formatted_prompt)
             return response.content
         except Exception as e:
-            print(f"❌ Error generating summary: {e}")
+            print(f"Error generating summary: {e}")
             return f"Sorry, I encountered an error while generating the summary: {str(e)}"
     
     def generate_questions(self, context: str) -> str:
@@ -73,7 +73,7 @@ class LLMChain:
             response = self.llm.invoke(formatted_prompt)
             return response.content
         except Exception as e:
-            print(f"❌ Error generating questions: {e}")
+            print(f"Error generating questions: {e}")
             return f"Sorry, I encountered an error while generating questions: {str(e)}"
     
     def fact_check(self, context: str, statement: str) -> str:
@@ -84,8 +84,8 @@ class LLMChain:
             response = self.llm.invoke(formatted_prompt)
             return response.content
         except Exception as e:
-            print(f"❌ Error during fact-checking: {e}")
-            return f"Sorry, I encountered an error while fact-checking: {str(e)}"
+            print(f"Error during fact-checking: {e}")
+            return f"Sorry, I encountered the error while fact-checking: {str(e)}"
     
     def detailed_analysis(self, context: str, question: str) -> str:
         """Provide detailed analysis based on the given context"""
@@ -95,7 +95,7 @@ class LLMChain:
             response = self.llm.invoke(formatted_prompt)
             return response.content
         except Exception as e:
-            print(f"❌ Error during detailed analysis: {e}")
+            print(f"Error during detailed analysis: {e}")
             return f"Sorry, I encountered an error while providing analysis: {str(e)}"
     
     def create_retrieval_qa_chain(self, retriever) -> RetrievalQA:
@@ -113,13 +113,13 @@ class LLMChain:
             print("RetrievalQA chain created successfully")
             return chain
         except Exception as e:
-            print(f"❌ Error creating RetrievalQA chain: {e}")
+            print(f"Error creating RetrievalQA chain: {e}")
             raise
     
     def create_custom_chain(self, retriever) -> Any:
         """Create a custom chain using LCEL (LangChain Expression Language)"""
         try:
-            # Create a custom chain that formats context and generates answers
+            
             def format_docs(docs):
                 return "\n\n".join(doc.page_content for doc in docs)
             
@@ -133,14 +133,14 @@ class LLMChain:
             print("Custom LCEL chain created successfully")
             return rag_chain
         except Exception as e:
-            print(f"❌ Error creating custom chain: {e}")
+            print(f"Error creating custom chain: {e}")
             raise
     
     def process_query_with_chain(self, query: str, chain, include_sources: bool = False) -> Dict[str, Any]:
         """Process a query using a chain and return results"""
         try:
             if hasattr(chain, 'invoke'):
-                # For custom chains
+                
                 result = chain.invoke(query)
                 return {
                     "answer": result,
@@ -148,7 +148,7 @@ class LLMChain:
                     "query": query
                 }
             elif hasattr(chain, '__call__'):
-                # For RetrievalQA chains
+               
                 result = chain(query)
                 return {
                     "answer": result.get("result", ""),
@@ -159,7 +159,7 @@ class LLMChain:
                 raise ValueError("Invalid chain type")
                 
         except Exception as e:
-            print(f"❌ Error processing query with chain: {e}")
+            print(f"Error processing query with chain: {e}")
             return {
                 "answer": f"Sorry, I encountered an error: {str(e)}",
                 "sources": [],
@@ -173,7 +173,6 @@ class LLMChain:
         if temperature is not None:
             self.temperature = temperature
         
-        # Reinitialize LLM with new parameters
         self._initialize_llm()
         print(f"Updated LLM parameters: model={self.model_name}, temperature={self.temperature}")
     
@@ -189,7 +188,7 @@ class LLMChain:
     def print_llm_summary(self):
         """Print a summary of the LLM configuration"""
         info = self.get_llm_info()
-        print("\n🤖 LLM Configuration Summary:")
+        print("\nLLM Configuration Summary:")
         print(f"   Provider: {info['provider']}")
         print(f"   Model: {info['model_name']}")
         print(f"   Temperature: {info['temperature']}")
@@ -204,8 +203,8 @@ class LLMChain:
                 print("LLM connection test successful")
                 return True
             else:
-                print("⚠️ LLM connection test returned unexpected response")
+                print("LLM connection test returned unexpected response")
                 return False
         except Exception as e:
-            print(f"❌ LLM connection test failed: {e}")
+            print(f"LLM connection test failed: {e}")
             return False

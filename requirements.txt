@@ -14,3 +14,4 @@ langchain-text-splitters
 rank_bm25
 langchain-huggingface
 chromadb
+cross-encoder

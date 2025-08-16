@@ -14,7 +14,7 @@ class EmbeddingModel:
     def _initialize_model(self):
         """Initialize the HuggingFace embedding model"""
         try:
-            # Use CPU for embeddings to avoid GPU memory issues
+            
             self.embeddings = HuggingFaceEmbeddings(
                 model_name=self.model_name,
                 model_kwargs={'device': 'cpu'},
@@ -23,7 +23,7 @@ class EmbeddingModel:
             print(f"Embedding model '{self.model_name}' initialized successfully")
         except Exception as e:
             print(f"Error initializing embedding model: {e}")
-            # Fallback to a smaller model
+            
             fallback_model = "sentence-transformers/all-MiniLM-L6-v2"
             print(f"Trying fallback model: {fallback_model}")
             try:
@@ -56,6 +56,6 @@ class EmbeddingModel:
         """Get the dimension of the embeddings"""
         if not self.embeddings:
             raise ValueError("Embedding model not initialized")
-        # Test with a simple text to get dimension
+    
         test_embedding = self.embed_text("test")
         return len(test_embedding)

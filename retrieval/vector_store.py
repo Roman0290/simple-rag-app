@@ -18,10 +18,9 @@ class VectorStore:
     def _initialize_vector_store(self):
         """Initialize the Chroma vector store"""
         try:
-            # Ensure the persistence directory exists
+            
             os.makedirs(self.persist_directory, exist_ok=True)
             
-            # Initialize Chroma with persistent storage
             self.vector_store = Chroma(
                 collection_name=self.collection_name,
                 embedding_function=self.embedding_function,
@@ -45,10 +44,7 @@ class VectorStore:
         try:
             print(f"Adding {len(documents)} documents to vector store...")
             
-            # Add documents to the vector store
             self.vector_store.add_documents(documents)
-            
-            # Persist the changes (automatic in newer Chroma versions)
             
             print(f"Successfully added {len(documents)} documents to vector store")
             return True
@@ -65,11 +61,9 @@ class VectorStore:
         
         try:
             print(f"Adding {len(texts)} texts to vector store...")
-            
-            # Add texts to the vector store
+           
             self.vector_store.add_texts(texts, metadatas=metadatas)
             
-            # Persist the changes (automatic in newer Chroma versions)
             
             print(f"Successfully added {len(texts)} texts to vector store")
             return True
@@ -129,7 +123,6 @@ class VectorStore:
         try:
             print("Clearing vector store collection...")
             self.vector_store._collection.delete(where={})
-            # Persist changes (automatic in newer Chroma versions)
             print("Vector store collection cleared successfully")
             return True
         except Exception as e:
@@ -141,7 +134,6 @@ class VectorStore:
         try:
             print(f"Deleting documents with criteria: {where_clause}")
             self.vector_store._collection.delete(where=where_clause)
-            # Persist changes (automatic in newer Chroma versions)
             print("Documents deleted successfully")
             return True
         except Exception as e:

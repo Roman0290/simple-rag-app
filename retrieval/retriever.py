@@ -2,16 +2,19 @@ from typing import List, Dict, Any
 from langchain_core.documents import Document
 from langchain_core.retrievers import BaseRetriever
 from .vector_store import VectorStore
+from .reranker import Reranker
 
 class Retriever:
-    """Class to handle document retrieval from vector store"""
-    
-    def __init__(self, vector_store: VectorStore, k: int = 4, search_type: str = "similarity"):
-        """Initialize retriever with vector store"""
+    """Class to handle document retrieval from vector store, with optional reranking"""
+    def __init__(self, vector_store: VectorStore, k: int = 4, search_type: str = "similarity", use_reranker: bool = False, reranker_top_k: int = None):
+        """Initialize retriever with vector store and optional reranker"""
         self.vector_store = vector_store
         self.k = k
         self.search_type = search_type
         self.retriever = self._create_retriever()
+        self.use_reranker = use_reranker
+        self.reranker_top_k = reranker_top_k
+        self.reranker = Reranker() if use_reranker else None
     
     def _create_retriever(self) -> BaseRetriever:
         """Create a LangChain retriever from the vector store"""
@@ -27,16 +30,16 @@ class Retriever:
             raise
     
     def retrieve_documents(self, query: str) -> List[Document]:
-        """Retrieve relevant documents for a query"""
+        """Retrieve relevant documents for a query, with optional reranking"""
         try:
             print(f"Retrieving documents for query: '{query[:50]}...'")
-            
-            # Use the LangChain retriever
             documents = self.retriever.get_relevant_documents(query)
-            
-            print(f"Retrieved {len(documents)} relevant documents")
+            print(f"Retrieved {len(documents)} relevant documents before reranking")
+            if self.use_reranker and self.reranker:
+                print("Applying reranker (cross-encoder/ms-marco-MiniLM-L-6-v2)...")
+                documents = self.reranker.rerank(query, documents, top_k=self.reranker_top_k or self.k)
+                print(f"Documents reranked. Returning top {len(documents)}.")
             return documents
-            
         except Exception as e:
             print(f"Error during retrieval: {e}")
             return []
@@ -46,7 +49,7 @@ class Retriever:
         try:
             print(f"Retrieving documents with scores for query: '{query[:50]}...'")
             
-            # Use direct vector store method for scores
+            
             results = self.vector_store.similarity_search_with_score(query, k=self.k)
             
             print(f"Retrieved {len(results)} documents with scores")
@@ -100,16 +103,20 @@ class Retriever:
             print(f"   Retrieval k: {stats['retrieval_k']}")
             print(f"   Search type: {stats['search_type']}")
     
-    def update_retrieval_parameters(self, k: int = None, search_type: str = None):
-        """Update retrieval parameters"""
+    def update_retrieval_parameters(self, k: int = None, search_type: str = None, use_reranker: bool = None, reranker_top_k: int = None):
+        """Update retrieval and reranker parameters"""
         if k is not None:
             self.k = k
         if search_type is not None:
             self.search_type = search_type
+        if use_reranker is not None:
+            self.use_reranker = use_reranker
+            self.reranker = Reranker() if use_reranker else None
+        if reranker_top_k is not None:
+            self.reranker_top_k = reranker_top_k
         
-        # Recreate retriever with new parameters
         self.retriever = self._create_retriever()
-        print(f"Updated retrieval parameters: k={self.k}, search_type={self.search_type}")
+        print(f"Updated retrieval parameters: k={self.k}, search_type={self.search_type}, use_reranker={self.use_reranker}, reranker_top_k={self.reranker_top_k}")
     
     def get_document_preview(self, documents: List[Document], max_chars: int = 200) -> List[str]:
         """Get preview of retrieved documents"""
@@ -142,10 +149,10 @@ class Retriever:
         if not documents:
             return 0.0
         
-        # Simple heuristic: longer documents might be more relevant
+      
         avg_length = sum(len(doc.page_content) for doc in documents) / len(documents)
         
-        # Normalize score (this is a basic implementation)
+      
         score = min(avg_length / 1000, 1.0)  # Cap at 1.0
         
         return score

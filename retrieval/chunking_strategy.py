@@ -25,7 +25,7 @@ class ChunkingStrategy:
     def chunk_documents(self, documents: List[Document]) -> List[Document]:
         """Split documents into chunks"""
         if not documents:
-            print("⚠️ No documents to chunk")
+            print("No documents to chunk")
             return []
         
         print(f"Chunking {len(documents)} documents...")
@@ -33,7 +33,7 @@ class ChunkingStrategy:
         print(f"   Chunk overlap: {self.chunk_overlap}")
         
         try:
-            # Split all documents
+           
             all_chunks = []
             for i, doc in enumerate(documents):
                 chunks = self.text_splitter.split_documents([doc])
@@ -44,7 +44,7 @@ class ChunkingStrategy:
             return all_chunks
             
         except Exception as e:
-            print(f"❌ Error during chunking: {e}")
+            print(f"Error during chunking: {e}")
             return []
     
     def chunk_single_document(self, document: Document) -> List[Document]:
@@ -54,7 +54,7 @@ class ChunkingStrategy:
             print(f"Created {len(chunks)} chunks from document")
             return chunks
         except Exception as e:
-            print(f"❌ Error chunking document: {e}")
+            print(f"Error chunking document: {e}")
             return []
     
     def get_chunk_statistics(self, chunks: List[Document]) -> dict:
